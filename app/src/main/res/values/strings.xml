@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">SafeVault</string>
+    <string name="vault_tagline">Encrypted Sensitive Notes &amp; Password Vault</string>
+    <string name="search_hint">Search portal, title, or username…</string>
+    <string name="all_categories">All Items</string>
+    <string name="favorites">Favorites</string>
+    <string name="social">Social</string>
+    <string name="email">Email</string>
+    <string name="banking">Banking</string>
+    <string name="work">Work</string>
+    <string name="shopping">Shopping</string>
+    <string name="other">Other</string>
+
+    <string name="unlock_vault">Unlock SafeVault</string>
+    <string name="enter_pin">Enter your 4-digit Master PIN</string>
+    <string name="create_pin">Set Master PIN</string>
+    <string name="create_pin_subtitle">Choose a 4-digit Master PIN to protect your vault</string>
+    <string name="confirm_pin">Confirm Master PIN</string>
+    <string name="confirm_pin_subtitle">Re-enter your 4-digit PIN to confirm</string>
+    <string name="pin_mismatch">PINs do not match. Please try again.</string>
+    <string name="pin_incorrect">Incorrect Master PIN. Please try again.</string>
+
+    <string name="add_credential">Add Credential</string>
+    <string name="edit_credential">Edit Credential</string>
+    <string name="title_label">Title / Account Name</string>
+    <string name="portal_label">Portal / Website (e.g. facebook.com, gmail.com)</string>
+    <string name="username_label">Username / Email</string>
+    <string name="password_label">Password</string>
+    <string name="notes_label">Sensitive Notes (PINs, 2FA backup codes, security answers)</string>
+    <string name="category_label">Category</string>
+
+    <string name="password_generator">Generate Strong Password</string>
+    <string name="copy_username">Copy Username</string>
+    <string name="copy_password">Copy Password</string>
+    <string name="copied_to_clipboard">Copied securely to clipboard (auto-clears in 30s)</string>
+    <string name="delete_credential">Delete</string>
+    <string name="delete_confirm_title">Delete Credential?</string>
+    <string name="delete_confirm_message">This record will be permanently wiped from encrypted storage.</string>
+</resources>

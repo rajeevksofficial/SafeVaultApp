@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_vault_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_vault_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SafeVault">
+
+        <!-- Master PIN Lock & Auth Screen (Launcher) -->
+        <activity
+            android:name=".AuthActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Main Vault Dashboard -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- Add & Edit Credential Screen -->
+        <activity
+            android:name=".AddEditCredentialActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Credential Detail View -->
+        <activity
+            android:name=".CredentialDetailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+    </application>
+
+</manifest>

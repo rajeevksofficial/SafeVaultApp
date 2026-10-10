@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background & Surfaces -->
+    <color name="vault_bg">#090D16</color>
+    <color name="vault_surface">#121829</color>
+    <color name="vault_card">#182035</color>
+    <color name="vault_card_stroke">#25314D</color>
+    <color name="vault_input_bg">#1D2640</color>
+
+    <!-- Brand Accents -->
+    <color name="brand_primary">#6366F1</color>
+    <color name="brand_primary_dark">#4F46E5</color>
+    <color name="brand_secondary">#06B6D4</color>
+    <color name="brand_accent_glow">#38BDF8</color>
+
+    <!-- Security & Strength Colors -->
+    <color name="security_emerald">#10B981</color>
+    <color name="security_emerald_subtle">#1A10B981</color>
+    <color name="security_amber">#F59E0B</color>
+    <color name="security_amber_subtle">#1AF59E0B</color>
+    <color name="security_crimson">#EF4444</color>
+    <color name="security_crimson_subtle">#1AEF4444</color>
+    <color name="security_indigo_subtle">#1A6366F1</color>
+
+    <!-- Category Pill Colors -->
+    <color name="cat_social">#3B82F6</color>
+    <color name="cat_email">#8B5CF6</color>
+    <color name="cat_banking">#10B981</color>
+    <color name="cat_work">#EC4899</color>
+    <color name="cat_shopping">#F97316</color>
+    <color name="cat_other">#64748B</color>
+
+    <!-- Typography -->
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_muted">#64748B</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
