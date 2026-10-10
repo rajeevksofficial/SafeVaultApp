@@ -20,6 +20,19 @@
     <string name="pin_mismatch">PINs do not match. Please try again.</string>
     <string name="pin_incorrect">Incorrect Master PIN. Please try again.</string>
 
+    <string name="change_master_pin">Change Master PIN</string>
+    <string name="step_verify_current">Step 1 of 3: Verify Current PIN</string>
+    <string name="step_enter_new">Step 2 of 3: Enter New PIN</string>
+    <string name="step_confirm_new">Step 3 of 3: Confirm New PIN</string>
+    <string name="enter_current_pin_title">Current Master PIN</string>
+    <string name="enter_current_pin_desc">Enter your current 4-digit Master PIN to authorize changes</string>
+    <string name="enter_new_pin_title">New Master PIN</string>
+    <string name="enter_new_pin_desc">Choose a new 4-digit Master PIN</string>
+    <string name="confirm_new_pin_title">Confirm New PIN</string>
+    <string name="confirm_new_pin_desc">Re-enter your new 4-digit PIN to confirm</string>
+    <string name="pin_same_as_current">New PIN must be different from current PIN.</string>
+    <string name="pin_changed_success">Master PIN updated successfully!</string>
+
     <string name="add_credential">Add Credential</string>
     <string name="edit_credential">Edit Credential</string>
     <string name="title_label">Title / Account Name</string>

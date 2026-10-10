@@ -62,12 +62,23 @@ object SecurityManager {
         return slowEquals(savedHash, calculatedHash)
     }
 
+    fun changeMasterPin(context: Context, currentPin: String, newPin: String): Boolean {
+        if (!verifyMasterPin(context, currentPin)) {
+            return false
+        }
+        setMasterPin(context, newPin)
+        return true
+    }
+
     fun resetVault(context: Context) {
         context.getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE)
             .edit()
             .clear()
             .apply()
     }
+
+    internal fun hashPinForTest(pin: String, salt: ByteArray): String = hashPin(pin, salt)
+    internal fun slowEqualsForTest(a: String, b: String): Boolean = slowEquals(a, b)
 
     private fun hashPin(pin: String, salt: ByteArray): String {
         val spec = PBEKeySpec(pin.toCharArray(), salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH)

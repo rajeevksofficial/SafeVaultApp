@@ -96,4 +96,59 @@ class SafeVaultSecurityTest {
         assertEquals(secret, SecurityManager.decrypt(enc1.first, enc1.second))
         assertEquals(secret, SecurityManager.decrypt(enc2.first, enc2.second))
     }
+
+    @Test
+    fun testMasterPinHashingAndVerification() {
+        val salt = ByteArray(16) { 0x42.toByte() }
+        val pin = "1234"
+        val hash1 = SecurityManager.hashPinForTest(pin, salt)
+        val hash2 = SecurityManager.hashPinForTest(pin, salt)
+
+        // Deterministic hash with same salt
+        assertEquals(hash1, hash2)
+        assertTrue(SecurityManager.slowEqualsForTest(hash1, hash2))
+
+        // Different PIN with same salt produces distinct hash
+        val wrongPinHash = SecurityManager.hashPinForTest("9999", salt)
+        assertNotEquals(hash1, wrongPinHash)
+        assertTrue(!SecurityManager.slowEqualsForTest(hash1, wrongPinHash))
+
+        // Same PIN with different salt produces distinct hash
+        val salt2 = ByteArray(16) { 0x24.toByte() }
+        val hashWithDifferentSalt = SecurityManager.hashPinForTest(pin, salt2)
+        assertNotEquals(hash1, hashWithDifferentSalt)
+    }
+
+    @Test
+    fun testMasterPinChangeSimulation() {
+        // Step 1: Initial PIN = "1234"
+        val oldSalt = ByteArray(16) { 1 }
+        val oldPin = "1234"
+        var currentHash = SecurityManager.hashPinForTest(oldPin, oldSalt)
+        var currentSalt = oldSalt
+
+        // Verify current PIN before change
+        val candidateOldPin = "1234"
+        val candidateOldHash = SecurityManager.hashPinForTest(candidateOldPin, currentSalt)
+        assertTrue(SecurityManager.slowEqualsForTest(currentHash, candidateOldHash))
+
+        // Wrong current PIN fails
+        val wrongCurrentPin = "0000"
+        val wrongCurrentHash = SecurityManager.hashPinForTest(wrongCurrentPin, currentSalt)
+        assertTrue(!SecurityManager.slowEqualsForTest(currentHash, wrongCurrentHash))
+
+        // Step 2 & 3: Change to new PIN = "5678" with fresh salt
+        val newSalt = ByteArray(16) { 2 }
+        val newPin = "5678"
+        currentHash = SecurityManager.hashPinForTest(newPin, newSalt)
+        currentSalt = newSalt
+
+        // Now old PIN no longer matches
+        val oldPinAgainstNewState = SecurityManager.hashPinForTest(oldPin, currentSalt)
+        assertTrue(!SecurityManager.slowEqualsForTest(currentHash, oldPinAgainstNewState))
+
+        // New PIN correctly matches
+        val newPinAgainstNewState = SecurityManager.hashPinForTest(newPin, currentSalt)
+        assertTrue(SecurityManager.slowEqualsForTest(currentHash, newPinAgainstNewState))
+    }
 }

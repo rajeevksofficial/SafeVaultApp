@@ -54,6 +54,17 @@
             </LinearLayout>
 
             <ImageButton
+                android:id="@+id/btnChangePin"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_pin_key"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_key"
+                android:contentDescription="@string/change_master_pin" />
+
+            <ImageButton
                 android:id="@+id/btnLockVault"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -61,7 +72,7 @@
                 android:padding="9dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_lock"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="Lock Vault" />
         </LinearLayout>
 
         <!-- Search Bar -->

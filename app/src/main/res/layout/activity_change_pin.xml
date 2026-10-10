@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/vault_bg"
+    android:padding="20dp">
+
+    <!-- Top Toolbar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_pin_key"
+            android:contentDescription="Back"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:text="@string/change_master_pin"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Step Badge Pill -->
+    <TextView
+        android:id="@+id/tvStepBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_step_badge"
+        android:paddingStart="14dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="6dp"
+        android:text="@string/step_verify_current"
+        android:textColor="@color/brand_accent_glow"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
+
+    <!-- Center Key Icon -->
+    <ImageView
+        android:id="@+id/ivKeyIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_key"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStepBadge"
+        tools:ignore="ContentDescription" />
+
+    <!-- Step Title -->
+    <TextView
+        android:id="@+id/tvPromptTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/enter_current_pin_title"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivKeyIcon" />
+
+    <!-- Step Subtitle / Instructions -->
+    <TextView
+        android:id="@+id/tvPromptSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:text="@string/enter_current_pin_desc"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPromptTitle" />
+
+    <!-- 4 PIN Dots -->
+    <LinearLayout
+        android:id="@+id/layoutPinDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPromptSubtitle">
+
+        <ImageView
+            android:id="@+id/ivDot1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/bg_pin_dot_empty"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ivDot2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/bg_pin_dot_empty"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ivDot3"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/bg_pin_dot_empty"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ivDot4"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/bg_pin_dot_empty"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <!-- Error Message -->
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/security_crimson"
+        android:textSize="13sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutPinDots"
+        tools:text="Incorrect Master PIN"
+        tools:visibility="visible" />
+
+    <!-- Numeric Keypad Grid -->
+    <GridLayout
+        android:id="@+id/gridKeypad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="4"
+        app:layout_constraintBottom_toTopOf="@id/tvCancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvError">
+
+        <!-- Row 1 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey1"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="1"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey2"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="2"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey3"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="3"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Row 2 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey4"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="4"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey5"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="5"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey6"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="6"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Row 3 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey7"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="7"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey8"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="8"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey9"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="9"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Row 4 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKeyClear"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="C"
+            android:textColor="@color/text_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnKey0"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:text="0"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnBackspace"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_pin_key"
+            android:contentDescription="Backspace"
+            android:src="@drawable/ic_backspace" />
+    </GridLayout>
+
+    <!-- Cancel button at bottom -->
+    <TextView
+        android:id="@+id/tvCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:text="Cancel &amp; Return to Vault"
+        android:textColor="@color/text_muted"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

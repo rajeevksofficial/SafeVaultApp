@@ -16,6 +16,9 @@ SafeVault stores passwords, portal logins (Facebook, Gmail, Netflix, banking), a
 - **📱 Android 6.0 (API 23+) Backwards Compatible**:
   - `minSdk = 23`, `compileSdk = 36`, `targetSdk = 36`.
   - Implements a pure-Kotlin RFC 4648 Base64 codec (`SafeBase64.kt`), ensuring zero dependency on Android 8.0+ (`java.util.Base64`) or unmocked JVM stub dependencies in JUnit tests.
+- **🔑 Change Master PIN Provision**:
+  - Secure 3-step verification flow: verify current PIN &rarr; enter new PIN &rarr; confirm new PIN.
+  - Generates fresh 16-byte PBKDF2 salt with continuous hardware Keystore access for stored secrets.
 - **🚫 Anti-Snoop & Screen Protection**:
   - Built-in `FLAG_SECURE` prevents screenshots, screen recording, and previews in Android's recent apps switcher.
 - **📋 Auto-Clearing Sensitive Clipboard**:
@@ -58,6 +61,7 @@ SafeVaultApp/
 │   │   │   │   ├── AuthActivity.kt              # Master PIN authentication & setup
 │   │   │   │   ├── BaseSecureActivity.kt        # FLAG_SECURE screen protection
 │   │   │   │   ├── CategoryAdapter.kt           # Horizontal category filter chips
+│   │   │   │   ├── ChangePinActivity.kt         # Change Master PIN (3-step flow)
 │   │   │   │   ├── ClipboardHelper.kt           # Auto-clearing sensitive clipboard
 │   │   │   │   ├── CredentialDetailActivity.kt  # Credential view & reveal toggle
 │   │   │   │   ├── MainActivity.kt              # Dashboard, search, card list
@@ -72,7 +76,7 @@ SafeVaultApp/
 │   │   └── test/java/com/safevault/app/
 │   │       └── SafeVaultSecurityTest.kt         # AES-256 GCM & PBKDF2 JUnit tests
 │   └── build.gradle.kts
-├── SafeVaultApp.apk                             # Pre-compiled standalone APK (5.95 MB)
+├── SafeVaultApp.apk                             # Pre-compiled standalone APK (6.72 MB)
 ├── build.gradle.kts
 ├── settings.gradle.kts
 └── README.md

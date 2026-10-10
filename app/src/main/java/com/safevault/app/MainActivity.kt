@@ -117,6 +117,11 @@ class MainActivity : BaseSecureActivity() {
             startActivity(intent)
         }
 
+        binding.btnChangePin.setOnClickListener {
+            val intent = Intent(this, ChangePinActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnLockVault.setOnClickListener {
             // Lock vault and require PIN to re-enter
             val intent = Intent(this, AuthActivity::class.java).apply {

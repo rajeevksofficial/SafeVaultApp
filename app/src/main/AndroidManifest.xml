@@ -38,6 +38,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Change Master PIN Screen -->
+        <activity
+            android:name=".ChangePinActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing" />
+
     </application>
 
 </manifest>
