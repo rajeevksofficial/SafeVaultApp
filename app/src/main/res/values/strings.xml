@@ -55,4 +55,12 @@
     <string name="import_csv_desc">Load credentials directly from a CSV file. Supports SafeVault, Chrome, Bitwarden, KeePass, LastPass, 1Password, or standard spreadsheets. All imported passwords and sensitive notes are instantly encrypted using AES-256 GCM.</string>
     <string name="select_csv_file">Choose CSV File</string>
     <string name="copy_sample_template">Copy Sample Template</string>
+
+    <string name="export_csv">Export CSV</string>
+    <string name="export_csv_title">Export Vault to CSV</string>
+    <string name="export_csv_warning">⚠️ Security Notice: Exporting your vault will decrypt and export all your passwords and sensitive notes into a standard CSV file.\n\nPlease store the exported file in a safe location.</string>
+    <string name="export_save_file">Save CSV to Storage</string>
+    <string name="export_share_file">Share / Send CSV</string>
+    <string name="view_mode_cards">Cards</string>
+    <string name="view_mode_table">Table</string>
 </resources>

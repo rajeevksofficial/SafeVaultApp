@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.safevault.app.databinding.ActivityMainBinding
 
@@ -17,14 +18,23 @@ class MainActivity : BaseSecureActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var dbHelper: VaultDatabaseHelper
     private lateinit var itemAdapter: VaultItemAdapter
+    private lateinit var tableAdapter: VaultTableAdapter
     private lateinit var categoryAdapter: CategoryAdapter
 
     private var currentCategory = "All Items"
     private var currentSearchQuery = ""
+    private var isTableViewActive = false
+    private var pendingExportCsvContent: String? = null
 
     private val openCsvLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri != null) {
             importCsvFromUri(uri)
+        }
+    }
+
+    private val createCsvDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri: Uri? ->
+        if (uri != null && pendingExportCsvContent != null) {
+            writeCsvToUri(uri, pendingExportCsvContent!!)
         }
     }
 
@@ -93,6 +103,33 @@ class MainActivity : BaseSecureActivity() {
             adapter = itemAdapter
         }
 
+        // Vault Table Adapter (Tabular Grid View)
+        tableAdapter = VaultTableAdapter(
+            onItemClick = { item ->
+                val intent = Intent(this, CredentialDetailActivity::class.java).apply {
+                    putExtra("item_id", item.id)
+                }
+                startActivity(intent)
+            },
+            onFavoriteToggle = { item ->
+                val newStatus = !item.isFavorite
+                dbHelper.toggleFavorite(item.id, newStatus)
+                refreshVaultList()
+            },
+            onCopyUsername = { item ->
+                ClipboardHelper.copyToClipboard(this, "Username", item.username, isSensitive = false)
+            },
+            onCopyPassword = { item ->
+                val decrypted = SecurityManager.decrypt(item.passwordEncrypted, item.passwordIv)
+                ClipboardHelper.copyToClipboard(this, "Password", decrypted, isSensitive = true)
+            }
+        )
+
+        binding.rvVaultTable.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = tableAdapter
+        }
+
         // Category Filter Chips
         categoryAdapter = CategoryAdapter(categories) { selectedCat ->
             currentCategory = selectedCat
@@ -127,8 +164,21 @@ class MainActivity : BaseSecureActivity() {
             startActivity(intent)
         }
 
+        // View Mode Switcher: Cards vs Table
+        binding.btnViewCards.setOnClickListener {
+            setTableViewMode(false)
+        }
+
+        binding.btnViewTable.setOnClickListener {
+            setTableViewMode(true)
+        }
+
         binding.btnImportCsv.setOnClickListener {
             showImportCsvDialog()
+        }
+
+        binding.btnExportCsv.setOnClickListener {
+            showExportCsvDialog()
         }
 
         binding.btnEmptyImportCsv.setOnClickListener {
@@ -148,6 +198,22 @@ class MainActivity : BaseSecureActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun setTableViewMode(active: Boolean) {
+        isTableViewActive = active
+        if (active) {
+            binding.btnViewTable.setBackgroundResource(R.drawable.bg_chip_selected)
+            binding.btnViewTable.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.btnViewCards.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            binding.btnViewCards.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        } else {
+            binding.btnViewCards.setBackgroundResource(R.drawable.bg_chip_selected)
+            binding.btnViewCards.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.btnViewTable.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            binding.btnViewTable.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        }
+        refreshVaultList()
     }
 
     private fun showImportCsvDialog() {
@@ -261,6 +327,71 @@ class MainActivity : BaseSecureActivity() {
             .show()
     }
 
+    private fun showExportCsvDialog() {
+        val allItems = dbHelper.getAllItems()
+        if (allItems.isEmpty()) {
+            Toast.makeText(this, "No credentials found in vault to export.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.export_csv_title)
+            .setMessage(getString(R.string.export_csv_warning))
+            .setPositiveButton(R.string.export_save_file) { _, _ ->
+                val csvContent = CsvExporter.exportToCsv(allItems)
+                pendingExportCsvContent = csvContent
+                val defaultFileName = CsvExporter.generateExportFileName()
+                try {
+                    createCsvDocumentLauncher.launch(defaultFileName)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Could not open file saver: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNeutralButton(R.string.export_share_file) { _, _ ->
+                val csvContent = CsvExporter.exportToCsv(allItems)
+                shareCsvContent(csvContent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun writeCsvToUri(uri: Uri, csvContent: String) {
+        Thread {
+            try {
+                contentResolver.openOutputStream(uri)?.use { os ->
+                    os.write(csvContent.toByteArray(Charsets.UTF_8))
+                    os.flush()
+                }
+                runOnUiThread {
+                    pendingExportCsvContent = null
+                    AlertDialog.Builder(this)
+                        .setTitle("CSV Export Successful")
+                        .setMessage("Vault credentials exported and saved to CSV successfully!\n\nRemember to keep the exported file confidential.")
+                        .setPositiveButton("Done", null)
+                        .show()
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "Failed to save CSV file: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
+    }
+
+    private fun shareCsvContent(csvContent: String) {
+        try {
+            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, "SafeVault Credentials Export")
+                putExtra(Intent.EXTRA_TEXT, csvContent)
+            }
+            val shareIntent = Intent.createChooser(sendIntent, "Share Vault CSV")
+            startActivity(shareIntent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to share CSV: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun refreshVaultList() {
         val favoritesOnly = currentCategory == "⭐ Favorites"
         val filterCategory = if (favoritesOnly || currentCategory == "All Items") null else currentCategory
@@ -272,10 +403,17 @@ class MainActivity : BaseSecureActivity() {
         )
 
         itemAdapter.submitList(items)
+        tableAdapter.submitList(items)
 
-        // Empty state visibility
+        // Stats update
+        val stats = dbHelper.getVaultStats()
+        binding.tvVaultStats.text = "${stats.totalCount} Records • 100% AES-256 Encrypted"
+        binding.tvFilteredCount.text = "Showing ${items.size} credential${if (items.size != 1) "s" else ""}"
+
+        // Empty state visibility & view mode management
         if (items.isEmpty()) {
             binding.rvVaultItems.visibility = View.GONE
+            binding.layoutTableView.visibility = View.GONE
             binding.layoutEmptyState.visibility = View.VISIBLE
             if (currentSearchQuery.isNotEmpty()) {
                 binding.tvEmptyTitle.text = "No Matches Found"
@@ -285,12 +423,14 @@ class MainActivity : BaseSecureActivity() {
                 binding.tvEmptySubtitle.text = "Tap + below to store your passwords and sensitive notes safely"
             }
         } else {
-            binding.rvVaultItems.visibility = View.VISIBLE
             binding.layoutEmptyState.visibility = View.GONE
+            if (isTableViewActive) {
+                binding.rvVaultItems.visibility = View.GONE
+                binding.layoutTableView.visibility = View.VISIBLE
+            } else {
+                binding.rvVaultItems.visibility = View.VISIBLE
+                binding.layoutTableView.visibility = View.GONE
+            }
         }
-
-        // Stats update
-        val stats = dbHelper.getVaultStats()
-        binding.tvVaultStats.text = "${stats.totalCount} Records • 100% AES-256 Encrypted"
     }
 }
