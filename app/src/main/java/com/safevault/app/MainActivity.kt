@@ -397,12 +397,31 @@ class MainActivity : BaseSecureActivity() {
 
     private fun shareCsvContent(csvContent: String) {
         try {
+            // Write CSV to a temporary file in cache directory with .csv extension
+            val exportDir = java.io.File(cacheDir, "csv_exports").apply { mkdirs() }
+            exportDir.listFiles()?.forEach { it.delete() } // Clean up previous cache
+
+            val fileName = CsvExporter.generateExportFileName()
+            val file = java.io.File(exportDir, fileName)
+            file.writeText(csvContent, Charsets.UTF_8)
+
+            val uri = androidx.core.content.FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                file
+            )
+
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, "SafeVault Credentials Export")
-                putExtra(Intent.EXTRA_TEXT, csvContent)
+                type = "text/csv"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, fileName)
+                clipData = android.content.ClipData.newUri(contentResolver, fileName, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            val shareIntent = Intent.createChooser(sendIntent, "Share Vault CSV")
+
+            val shareIntent = Intent.createChooser(sendIntent, "Share SafeVault CSV").apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
             startActivity(shareIntent)
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to share CSV: ${e.message}", Toast.LENGTH_SHORT).show()
