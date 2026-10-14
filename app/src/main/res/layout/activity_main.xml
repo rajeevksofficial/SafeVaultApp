@@ -279,12 +279,15 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thTitle"
                             android:layout_width="130dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:background="?attr/selectableItemBackground"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
-                            android:text="TITLE"
-                            android:textColor="@color/text_primary"
+                            android:text="TITLE ▲"
+                            android:textColor="@color/brand_accent_glow"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
@@ -294,8 +297,11 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thPortal"
                             android:layout_width="110dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:background="?attr/selectableItemBackground"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="PORTAL"
@@ -309,8 +315,11 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thUsername"
                             android:layout_width="130dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:background="?attr/selectableItemBackground"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="USERNAME"
@@ -324,8 +333,10 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thPassword"
                             android:layout_width="140dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="PASSWORD"
@@ -339,9 +350,11 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thCategory"
                             android:layout_width="85dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
                             android:text="CATEGORY"
                             android:textColor="@color/text_primary"
                             android:textSize="11sp"
@@ -353,9 +366,11 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thStrength"
                             android:layout_width="80dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
                             android:text="STRENGTH"
                             android:textColor="@color/text_primary"
                             android:textSize="11sp"
@@ -367,9 +382,11 @@
                             android:background="@color/vault_card_stroke" />
 
                         <TextView
+                            android:id="@+id/thFav"
                             android:layout_width="40dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
+                            android:background="?attr/selectableItemBackground"
                             android:text="FAV"
                             android:textColor="@color/text_primary"
                             android:textSize="11sp"

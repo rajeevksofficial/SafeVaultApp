@@ -26,6 +26,13 @@ class MainActivity : BaseSecureActivity() {
     private var isTableViewActive = false
     private var pendingExportCsvContent: String? = null
 
+    enum class TableSortColumn {
+        TITLE, PORTAL, USERNAME, CATEGORY, STRENGTH, FAVORITE
+    }
+
+    private var tableSortColumn = TableSortColumn.TITLE
+    private var tableSortAscending = true
+
     private val openCsvLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri != null) {
             importCsvFromUri(uri)
@@ -198,6 +205,16 @@ class MainActivity : BaseSecureActivity() {
             startActivity(intent)
             finish()
         }
+
+        // Table Header Column Sorting
+        binding.thTitle.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.TITLE) }
+        binding.thPortal.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.PORTAL) }
+        binding.thUsername.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.USERNAME) }
+        binding.thCategory.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.CATEGORY) }
+        binding.thStrength.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.STRENGTH) }
+        binding.thFav.setOnClickListener { onTableSortHeaderClicked(TableSortColumn.FAVORITE) }
+
+        updateTableHeaderUi()
     }
 
     private fun setTableViewMode(active: Boolean) {
@@ -403,7 +420,7 @@ class MainActivity : BaseSecureActivity() {
         )
 
         itemAdapter.submitList(items)
-        tableAdapter.submitList(items)
+        tableAdapter.submitList(sortTableItems(items))
 
         // Stats update
         val stats = dbHelper.getVaultStats()
@@ -431,6 +448,65 @@ class MainActivity : BaseSecureActivity() {
                 binding.rvVaultItems.visibility = View.VISIBLE
                 binding.layoutTableView.visibility = View.GONE
             }
+        }
+    }
+
+    private fun onTableSortHeaderClicked(column: TableSortColumn) {
+        if (tableSortColumn == column) {
+            tableSortAscending = !tableSortAscending
+        } else {
+            tableSortColumn = column
+            tableSortAscending = true
+        }
+        updateTableHeaderUi()
+        refreshVaultList()
+    }
+
+    private fun updateTableHeaderUi() {
+        val arrow = if (tableSortAscending) " ▲" else " ▼"
+        val activeColor = ContextCompat.getColor(this, R.color.brand_accent_glow)
+        val defaultColor = ContextCompat.getColor(this, R.color.text_primary)
+
+        binding.thTitle.text = if (tableSortColumn == TableSortColumn.TITLE) "TITLE$arrow" else "TITLE"
+        binding.thTitle.setTextColor(if (tableSortColumn == TableSortColumn.TITLE) activeColor else defaultColor)
+
+        binding.thPortal.text = if (tableSortColumn == TableSortColumn.PORTAL) "PORTAL$arrow" else "PORTAL"
+        binding.thPortal.setTextColor(if (tableSortColumn == TableSortColumn.PORTAL) activeColor else defaultColor)
+
+        binding.thUsername.text = if (tableSortColumn == TableSortColumn.USERNAME) "USERNAME$arrow" else "USERNAME"
+        binding.thUsername.setTextColor(if (tableSortColumn == TableSortColumn.USERNAME) activeColor else defaultColor)
+
+        binding.thCategory.text = if (tableSortColumn == TableSortColumn.CATEGORY) "CATEGORY$arrow" else "CATEGORY"
+        binding.thCategory.setTextColor(if (tableSortColumn == TableSortColumn.CATEGORY) activeColor else defaultColor)
+
+        binding.thStrength.text = if (tableSortColumn == TableSortColumn.STRENGTH) "STRENGTH$arrow" else "STRENGTH"
+        binding.thStrength.setTextColor(if (tableSortColumn == TableSortColumn.STRENGTH) activeColor else defaultColor)
+
+        binding.thFav.text = if (tableSortColumn == TableSortColumn.FAVORITE) "FAV$arrow" else "FAV"
+        binding.thFav.setTextColor(if (tableSortColumn == TableSortColumn.FAVORITE) activeColor else defaultColor)
+    }
+
+    private fun sortTableItems(items: List<VaultItem>): List<VaultItem> {
+        val comparator: java.util.Comparator<VaultItem> = when (tableSortColumn) {
+            TableSortColumn.TITLE -> compareBy(java.lang.String.CASE_INSENSITIVE_ORDER) { it.title }
+            TableSortColumn.PORTAL -> compareBy(java.lang.String.CASE_INSENSITIVE_ORDER) { it.portal }
+            TableSortColumn.USERNAME -> compareBy(java.lang.String.CASE_INSENSITIVE_ORDER) { it.username }
+            TableSortColumn.CATEGORY -> compareBy(java.lang.String.CASE_INSENSITIVE_ORDER) { it.category }
+            TableSortColumn.STRENGTH -> compareBy {
+                when (it.passwordStrength.lowercase(java.util.Locale.ROOT)) {
+                    "strong" -> 3
+                    "medium" -> 2
+                    "weak" -> 1
+                    else -> 0
+                }
+            }
+            TableSortColumn.FAVORITE -> compareBy { if (it.isFavorite) 1 else 0 }
+        }
+
+        return if (tableSortAscending) {
+            items.sortedWith(comparator)
+        } else {
+            items.sortedWith(comparator.reversed())
         }
     }
 }
