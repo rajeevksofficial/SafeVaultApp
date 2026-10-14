@@ -49,4 +49,10 @@
     <string name="delete_credential">Delete</string>
     <string name="delete_confirm_title">Delete Credential?</string>
     <string name="delete_confirm_message">This record will be permanently wiped from encrypted storage.</string>
+
+    <string name="import_csv">Import CSV</string>
+    <string name="import_csv_title">Import Credentials from CSV</string>
+    <string name="import_csv_desc">Load credentials directly from a CSV file. Supports SafeVault, Chrome, Bitwarden, KeePass, LastPass, 1Password, or standard spreadsheets. All imported passwords and sensitive notes are instantly encrypted using AES-256 GCM.</string>
+    <string name="select_csv_file">Choose CSV File</string>
+    <string name="copy_sample_template">Copy Sample Template</string>
 </resources>

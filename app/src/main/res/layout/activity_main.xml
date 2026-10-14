@@ -54,6 +54,17 @@
             </LinearLayout>
 
             <ImageButton
+                android:id="@+id/btnImportCsv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_pin_key"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_import_csv"
+                android:contentDescription="@string/import_csv" />
+
+            <ImageButton
                 android:id="@+id/btnChangePin"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -193,6 +204,19 @@
                 android:text="Tap + below to store your passwords and sensitive notes safely"
                 android:textColor="@color/text_muted"
                 android:textSize="13sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEmptyImportCsv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/vault_card"
+                android:text="📥 Import CSV File"
+                android:textColor="@color/security_emerald"
+                android:textSize="13sp"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/security_emerald"
+                app:strokeWidth="1dp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

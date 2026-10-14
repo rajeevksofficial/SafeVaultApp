@@ -79,6 +79,37 @@ class VaultDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_ITEMS, null, values)
     }
 
+    fun insertBatch(items: List<VaultItem>): Int {
+        val db = writableDatabase
+        var count = 0
+        db.beginTransaction()
+        try {
+            for (item in items) {
+                val values = ContentValues().apply {
+                    put(COL_TITLE, item.title)
+                    put(COL_PORTAL, item.portal)
+                    put(COL_USERNAME, item.username)
+                    put(COL_PASSWORD_ENCRYPTED, item.passwordEncrypted)
+                    put(COL_PASSWORD_IV, item.passwordIv)
+                    put(COL_CATEGORY, item.category)
+                    put(COL_NOTES_ENCRYPTED, item.notesEncrypted)
+                    put(COL_NOTES_IV, item.notesIv)
+                    put(COL_PASSWORD_STRENGTH, item.passwordStrength)
+                    put(COL_IS_FAVORITE, if (item.isFavorite) 1 else 0)
+                    put(COL_CREATED_AT, item.createdAt)
+                    put(COL_UPDATED_AT, item.updatedAt)
+                }
+                if (db.insert(TABLE_ITEMS, null, values) > 0) {
+                    count++
+                }
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+        return count
+    }
+
     fun update(item: VaultItem): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
